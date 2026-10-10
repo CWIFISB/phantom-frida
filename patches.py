@@ -37,7 +37,7 @@ def get_required_file_patches(name: str) -> list[RequiredFilePatch]:
     """Return exact Frida source patches required for Android runtime correctness."""
     linux_host_session = "subprojects/frida-core/src/linux/linux-host-session.vala"
     cap_name = name[0].upper() + name[1:]
-    rpc_tag_expression = "String.fromCharCode(102, 114, 105, 100, 97, 58, 114, 112, 99)"
+    rpc_tag_expression = "[102,114,105,100,97,58,114,112,99].map(c=>String.fromCharCode(c)).join('')"
     return [
         RequiredFilePatch(
             linux_host_session,
