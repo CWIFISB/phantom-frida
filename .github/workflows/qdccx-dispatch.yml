@@ -9,7 +9,7 @@ on:
       frida_version:
         description: Frida version
         required: true
-        default: "17.16.4"
+        default: "17.23.3"
 permissions:
   contents: read
 jobs:
