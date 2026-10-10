@@ -1,0 +1,25 @@
+name: QDCCX Build
+on:
+  workflow_dispatch:
+    inputs:
+      custom_name:
+        description: Replacement name
+        required: true
+        default: qdccx
+      frida_version:
+        description: Frida version
+        required: true
+        default: "17.16.4"
+permissions:
+  contents: read
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      frida_version: ${{ inputs.frida_version }}
+      custom_name: ${{ inputs.custom_name }}
+      arch: android-arm64
+      port: "31337"
+      extended: true
+      temp_fixes: false
+      strict_wx: true
