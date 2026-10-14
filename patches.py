@@ -69,10 +69,15 @@ def get_required_file_patches(name: str) -> list[RequiredFilePatch]:
         ),
         RequiredFilePatch(
             "subprojects/frida-core/lib/payload/exit-monitor.vala",
-            '\t\tconstruct {\n\t\t\tvar interceptor = Gum.Interceptor.obtain ();\n\n\t\t\tunowned Gum.InvocationListener listener = this;\n\n#if WINDOWS\n\t\t\tinterceptor.attach ((void *) Gum.Process.find_module_by_name ("kernel32.dll").find_export_by_name ("ExitProcess"),\n\t\t\t\tlistener);\n#else\n\t\t\tconst string[] apis = {\n\t\t\t\t"exit",\n\t\t\t\t"_exit",\n\t\t\t\t"abort",\n\t\t\t};\n#if PROSPERO\n\t\t\tforeach (var symbol in apis) {\n\t\t\t\tinterceptor.attach ((void *) Gum.Module.find_global_export_by_name (symbol), listener);\n\t\t\t}\n#else\n\t\t\tvar libc = Gum.Process.get_libc_module ();\n\t\t\tforeach (var symbol in apis) {\n\t\t\t\tinterceptor.attach ((void *) libc.find_export_by_name (symbol), listener);\n\t\t\t}\n#endif\n#endif\n\t\t}',
-            """\t\tconstruct {
-\t\t\t// Exit interception intentionally disabled.
-\t\t}""",
+            "\t\tconstruct {\n\t\t\tvar interceptor = Gum.Interceptor.obtain ();\n\n\t\t\tunowned Gum.InvocationListener listener = this;\n\n#if WINDOWS\n\t\t\tinterceptor.attach ((void *) Gum.Process.find_module_by_name (\"kernel32.dll\").find_export_by_name (\"ExitProcess\"),\n\t\t\t\tlistener);\n#else\n\t\t\tconst string[] apis = {\n\t\t\t\t\"exit\",\n\t\t\t\t\"_exit\",\n\t\t\t\t\"abort\",\n\t\t\t};\n#if PROSPERO\n\t\t\tforeach (var symbol in apis) {\n\t\t\t\tinterceptor.attach ((void *) Gum.Module.find_global_export_by_name (symbol), listener);\n\t\t\t}\n#else\n\t\t\tvar libc = Gum.Process.get_libc_module ();\n\t\t\tforeach (var symbol in apis) {\n\t\t\t\tinterceptor.attach ((void *) libc.find_export_by_name (symbol), listener);\n\t\t\t}\n#endif\n#endif\n\t\t}",
+            """\t\tconstruct {\n\t\t\t// Exit interception intentionally disabled.\n\t\t}""",
+            minimum=0,
+        ),
+        RequiredFilePatch(
+            "subprojects/frida-core/lib/payload/exit-monitor.vala",
+            "\t\tconstruct {\n\t\t\tvar interceptor = Gum.Interceptor.obtain ();\n\t\t\tunowned Gum.InvocationListener listener = this;\n#if WINDOWS\n\t\t\tinterceptor.attach ((void *) Gum.Process.find_module_by_name (\"kernel32.dll\").find_export_by_name (\"ExitProcess\"),\n\t\t\t\tlistener);\n#else\n\t\t\tvar libc = Gum.Process.get_libc_module ();\n\t\t\tconst string[] apis = {\n\t\t\t\t\"exit\",\n\t\t\t\t\"_exit\",\n\t\t\t\t\"abort\",\n\t\t\t};\n\t\t\tforeach (var symbol in apis) {\n\t\t\t\tinterceptor.attach ((void *) libc.find_export_by_name (symbol), listener);\n\t\t\t}\n#endif\n\t\t}",
+            """\t\tconstruct {\n\t\t\t// Exit interception intentionally disabled.\n\t\t}""",
+            minimum=0,
         ),
         RequiredFilePatch(
             "subprojects/frida-gum/gum/backend-posix/gumexceptor-posix.c",
